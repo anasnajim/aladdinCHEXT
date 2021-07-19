@@ -49,6 +49,9 @@ const db = require("./models");
 // prod
 db.sequelize.sync();
 
+require("./cron/app.cron")(app);
+
+
 app.listen(port, () => {
 	console.log(`APP DATA SERVER READY: listen port : ${port}`);
 });
