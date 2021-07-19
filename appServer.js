@@ -19,9 +19,9 @@ const port = process.env.PORT;
 app.use(cors());
 app.use(express.json());
 
-// files
-var dir = path.join(__dirname, 'public');
-app.use(express.static(dir));
+// file hosting for app : disabled
+// var dir = path.join(__dirname, 'public');
+// app.use(express.static(dir));
 
 // import routes
 require("./routes/auth.routes")(app);
