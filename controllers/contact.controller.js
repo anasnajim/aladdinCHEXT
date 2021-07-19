@@ -2,38 +2,41 @@ const { sequelize } = require("../models");
 const models = require("../models");
 const Contact = models.contact;
 const UserContact = models.user_contacts;
+const UserCredits = models.user_credits;
+const UserUsages = models.user_usages;
 const Op = models.Sequelize.Op;
 const where = models.Sequelize.where;
 const fn = models.Sequelize.fn;
 const col = models.Sequelize.col;
+const literal = models.Sequelize.literal;
 
 // create/save Contact model
-exports.create = async (req, res) => {
-	if (!req.body.name) {
-		res.status(400).send({
-			message: "Contact name required!"
-		});
-		return;
-	}
+// exports.create = async (req, res) => {
+// 	if (!req.body.name) {
+// 		res.status(400).send({
+// 			message: "Contact name required!"
+// 		});
+// 		return;
+// 	}
 
-	const contact = {
-		name: req.body.name,
-		profile: req.body.profile,
-		email: req.body.email,
-		phone: req.body.phone
-	};
+// 	const contact = {
+// 		name: req.body.name,
+// 		profile: req.body.profile,
+// 		email: req.body.email,
+// 		phone: req.body.phone
+// 	};
 
-	await Contact.create(contact)
-		.then(data => {
-			res.send(data);
-		})
-		.catch(err => {
-			res.status(500).send({
-				message:
-					err.message || "Error saving contact."
-			});
-		});
-};
+// 	await Contact.create(contact)
+// 		.then(data => {
+// 			res.send(data);
+// 		})
+// 		.catch(err => {
+// 			res.status(500).send({
+// 				message:
+// 					err.message || "Error saving contact."
+// 			});
+// 		});
+// };
 
 // get all Contact records
 // exports.findAll = async (req, res) => {
@@ -215,7 +218,7 @@ exports.search = async (req, res) => {
 				name: contact.name,
 				email: contact.email,
 				phone: userContact ? contact.phone : securePhone(contact.phone),
-				tel: userContact? contact.tel : securePhone(contact.tel),
+				tel: userContact ? contact.tel : securePhone(contact.tel),
 				in_url: contact.in_url,
 				company: contact.company,
 				company_site: contact.company_site,
@@ -237,6 +240,7 @@ exports.search = async (req, res) => {
 			email: "",
 			phone: ""
 		});
+		return;
 	};
 };
 
@@ -247,12 +251,13 @@ exports.paidsearch = async (req, res) => {
 			email: "",
 			phone: ""
 		});
+		return;
 	}
 
 	try {
 		let name = (req.body.name).toLowerCase();
 		let company = (req.body.company).toLowerCase();
-		
+
 		const contact = await Contact.findOne({
 			where: {
 				[Op.and]: [
@@ -289,14 +294,148 @@ exports.paidsearch = async (req, res) => {
 				where: user_contact
 			});
 
+			let wish_usage = false;
+
 			if (!user_contact_link_exist) {
 
-				let new_user_contact = await UserContact.create(user_contact);
-				if (!new_user_contact) {
-					res.status(500).send({
-						message: "Contact link not saved!"
+				let free_wish = await UserCredits.findOne({
+					where: {
+						user_id: req.user_id,
+						credit_type: 'trial',
+						used_credits: {
+							[Op.lt]: col('credits')
+						},
+						[Op.and]: [
+							literal(`createdAt + INTERVAL 90 day >= now()`)
+						]
+					},
+					order: [
+						['id', 'ASC']
+					]
+				});
+
+				let referral_wish = await UserCredits.findOne({
+					where: {
+						user_id: req.user_id,
+						credit_type: 'referral',
+						used_credits: {
+							[Op.lt]: col('credits')
+						},
+						[Op.and]: [
+							literal(`createdAt + INTERVAL 90 day >= now()`)
+						]
+					},
+					order: [
+						['id', 'ASC']
+					]
+				});
+
+				let paid_wish = await UserCredits.findOne({
+					where: {
+						user_id: req.user_id,
+						credit_type: 'paid',
+						used_credits: {
+							[Op.lt]: col('credits')
+						},
+						[Op.and]: [
+							literal(`createdAt + INTERVAL 90 day >= now()`)
+						]
+					},
+					order: [
+						['id', 'ASC']
+					]
+				});
+
+				// @todo - non-hardcoded access_types from table: user_access_types
+				if (free_wish !== null) {
+					
+					let new_user_contact = await UserContact.create(user_contact);
+					if (!new_user_contact) {
+						res.status(500).send({
+							message: "Contact link not saved!"
+						});
+						return;
+					}
+
+					free_wish.used_credits += 1;
+					free_wish.save();
+
+					// set access type: 0 - trial
+					await UserContact.update({
+						access_type: 0
+					}, {
+						where: {
+							id: new_user_contact.id
+						}
 					});
+
+					wish_usage = true;
+
+				} else if (referral_wish !== null) {
+
+					let new_user_contact = await UserContact.create(user_contact);
+					if (!new_user_contact) {
+						res.status(500).send({
+							message: "Contact link not saved!"
+						});
+						return;
+					}
+
+					free_wish.used_credits += 1;
+					free_wish.save();
+
+					// set access type: 1 - referral
+					await UserContact.update({
+						access_type: 1
+					}, {
+						where: {
+							id: new_user_contact.id
+						}
+					});
+
+					wish_usage = true;
+
+				} else if (paid_wish !== null) {
+
+					let new_user_contact = await UserContact.create(user_contact);
+					if (!new_user_contact) {
+						res.status(500).send({
+							message: "Contact link not saved!"
+						});
+						return;
+					}
+					
+					paid_wish.used_credits += 1;
+					paid_wish.save();
+
+					// set access type: 2 - paid
+					await UserContact.update({
+						access_type: 2
+					}, {
+						where: {
+							id: new_user_contact.id
+						}
+					});
+
+					wish_usage = true;
+
+				}else{
+					// no free and paid wish credits
+					// return blanks
+					res.send({
+						email: "",
+						phone: ""
+					});
+					return;
 				}
+			}
+
+			if(wish_usage){
+				const usage_info = {
+					user_id: req.user_id,
+					week_usage: literal(`week(now())`)
+				};
+				await UserUsages.create(usage_info);
 			}
 
 			res.send({
@@ -325,6 +464,7 @@ exports.paidsearch = async (req, res) => {
 			email: "",
 			phone: ""
 		});
+		return;
 	};
 };
 
