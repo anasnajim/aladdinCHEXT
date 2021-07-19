@@ -6,7 +6,7 @@ module.exports = app => {
 	var router = require("express").Router();
 
 	// Create a new Contact
-	router.post("/", token.authenticateToken, contact.create);
+	// router.post("/", token.authenticateToken, contact.create);
 
 	// Retrieve all Contact
 	// router.get("/", token.authenticateToken, contact.findAll);
