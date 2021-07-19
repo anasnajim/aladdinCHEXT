@@ -5,6 +5,9 @@ module.exports = (sequelize, Sequelize) => {
 		},
 		contact_id: {
 			type: Sequelize.BIGINT
+		},
+		access_type: {
+			type: Sequelize.INTEGER
 		}
 	});
 

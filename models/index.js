@@ -19,7 +19,11 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user = require("./User.js")(sequelize, Sequelize);
+db.user_credits = require("./UserCredits.js")(sequelize, Sequelize);
+db.user_usages = require("./UserUsages.js")(sequelize, Sequelize);
+db.user_referrals = require("./UserReferrals.js")(sequelize, Sequelize);
 db.user_contacts = require("./UserContacts.js")(sequelize, Sequelize);
+db.user_access = require("./UserAccessTypes.js")(sequelize, Sequelize);
 db.department = require("./Department.js")(sequelize, Sequelize);
 db.contact = require("./Contact.js")(sequelize, Sequelize);
 
