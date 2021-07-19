@@ -25,6 +25,7 @@ app.use(express.static(dir));
 
 // import routes
 require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
 require("./routes/contact.routes")(app);
 
 // db auth and connection
@@ -39,6 +40,6 @@ app.listen(port, () => {
 // main API route
 app.get('/', async (req, res) => {
 	res.json({
-		status: 'API READY!'
+		status: 'ALADDINB2B-CX API READY!'
 	});
 });
