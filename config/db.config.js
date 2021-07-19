@@ -1,3 +1,4 @@
+const fs = require('fs');
 
 module.exports = {
 	HOST: process.env.DB_HOST,
@@ -8,11 +9,13 @@ module.exports = {
 	pool: {
 		max: 5,
 		min: 0,
-		acquire: 30000,
-		idle: 10000
+		acquire: 60000,
+		idle: 30000
 	},
-	ssl: true,
-	dialectOptions: {
-		ssl: true
-	}
+	// SSL requirement disabled - no need for this
+	// dialectOptions: {
+	// 	ssl: {
+	// 		ca: fs.readFileSync('./certs/ssl_aladdin_db.pem')
+	// 	}
+	// }
 };
