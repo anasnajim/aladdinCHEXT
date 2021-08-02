@@ -201,6 +201,9 @@ exports.search = async (req, res) => {
 			});
 
 			// multiple email
+			if(contact.email === null){
+				contact.email = "";
+			}
 			let em = contact.email.split(',');
 			let em_list = [];
 			if (em.length > 1 && !userContact) {
@@ -210,15 +213,43 @@ exports.search = async (req, res) => {
 				contact.email = em_list.join(',');
 			} else if (!userContact) {
 				contact.email = secureEmail(contact.email);
-			} else {
-				// do nothing
+			}
+
+			// multiple phone
+			if(contact.phone === null){
+				contact.phone = "";
+			}
+			let phone = contact.phone.split(',');
+			let phone_list = [];
+			if (phone.length > 1 && !userContact) {
+				for (let x = 0; x < phone.length; x++) {
+					phone_list.push(securePhone(phone[x]));
+				}
+				contact.phone = phone_list.join(',');
+			} else if (!userContact) {
+				contact.phone = securePhone(contact.phone);
+			}
+
+			// multiple tel
+			if(contact.tel === null){
+				contact.tel = "";
+			}
+			let tel = contact.tel.split(',');
+			let tel_list = [];
+			if (tel.length > 1 && !userContact) {
+				for (let x = 0; x < tel.length; x++) {
+					tel_list.push(securePhone(tel[x]));
+				}
+				contact.tel = tel_list.join(',');
+			} else if (!userContact) {
+				contact.tel = securePhone(contact.tel);
 			}
 
 			res.send({
 				name: contact.name,
 				email: contact.email,
-				phone: userContact ? contact.phone : securePhone(contact.phone),
-				tel: userContact ? contact.tel : securePhone(contact.tel),
+				phone: contact.phone,
+				tel: contact.tel,
 				in_url: contact.in_url,
 				company: contact.company,
 				company_site: contact.company_site,
