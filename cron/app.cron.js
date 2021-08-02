@@ -15,7 +15,7 @@ module.exports = app => {
                 SELECT * FROM users 
                 LEFT JOIN user_credits ON users.id = user_credits.user_id 
                 WHERE used_credits < credits 
-                AND credit_type = 'trial'
+                AND credit_type in ('trial', 'referral', 'paid')
                 AND DATEDIFF(user_credits.createdAt + INTERVAL 80 DAY, NOW()) <= 10
         `, { type: models.sequelize.QueryTypes.SELECT });
 
