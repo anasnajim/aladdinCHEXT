@@ -92,8 +92,8 @@ exports.referral = async (req, res) => {
             to: refer_email,
             from: process.env.SENDGRID_MAIL_PORTAL,
             subject: process.env.ALADDINB2B_REFERRAL_SUBJ,
-            text: `Dear ${refer_email}, You have been referred to AladdinB2B Portal. Sigup now to get 12 Free Wishes for 1 month trial. Use this code when signing up. ${refer_code} Thank you, -AladdinB2B`,
-            html: `Dear ${refer_email},<br/><br/>You have been referred to AladdinB2B Portal.<br/><br/>Signup now to get 12 Free Wishes for 1 month trial.<br/><br/>Use the code below when signing up.<br/><br/>${refer_code}<br/><br/><br/>Thank you,<br/>-AladdinB2B`,
+            text: `Dear ${refer_email}, Your friend (name) is using AladdinB2B to meet the right business matches and has referred you to try it out. Sign up now to get a free one-month trial and 12 free wishes. Use the code ${refer_code} when signing up. Thank you and happy matching! AladdinB2B`,
+            html: `Dear ${refer_email},<br/><br/>Your friend (name) is using AladdinB2B to meet the right business matches and has referred you to try it out.<br/><br/>Sign up now to get a free one-month trial and 12 free wishes.<br/><br/>Use the code below when signing up.<br/><br/>${refer_code}<br/><br/><br/>Thank you and happy matching!<br/>AladdinB2B`,
         };
 
         sgMail

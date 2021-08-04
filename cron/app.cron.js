@@ -31,8 +31,8 @@ module.exports = app => {
                 to: recipient,
                 from: process.env.SENDGRID_MAIL_PORTAL,
                 subject: process.env.ALADDINB2B_WISH_REMINDER_SUBJ,
-                text: `Dear ${recipient}, Please be reminded that your wishes will reset soon. Thank you, -AladdinB2B`,
-                html: `Dear ${recipient},<br/><br/>Please be reminded that your wishes will reset soon.<br/><br/><br/>Thank you,<br/>-AladdinB2B`,
+                text: `Dear ${recipient}, Just a reminder that your wishes will reset on (date). Thank you and happy matching! AladdinB2B`,
+                html: `Dear ${recipient},<br/><br/>Just a reminder that your wishes will reset on (date).<br/><br/><br/>Thank you and happy matching!<br/>AladdinB2B`,
             };
 
             sgMail

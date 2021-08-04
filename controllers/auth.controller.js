@@ -90,8 +90,8 @@ exports.register = async (req, res) => {
                 to: new_user.user_email,
                 from: process.env.SENDGRID_MAIL_PORTAL,
                 subject: process.env.ALADDINB2B_SIGNUP_SUBJ,
-                text: `Dear ${user.user_firstname} ${user.user_lastname}, You are now registered to AladdinB2B Portal. 12 Free Wishes are available to your account for 1 month trial. Thank you, -AladdinB2B`,
-                html: `Dear ${user.user_firstname} ${user.user_lastname},<br/><br/>You are now registered to AladdinB2B Portal.<br/><br/>12 Free Wishes are available to your account for 1 month trial.<br/><br/><br/>Thank you,<br/>-AladdinB2B`,
+                text: `Dear ${user.user_firstname} ${user.user_lastname}, You are now registered to AladdinB2B portal. We have added 12 free wishes to your account for your one month trial. Thank you and happy matching! AladdinB2B`,
+                html: `Dear ${user.user_firstname} ${user.user_lastname},<br/><br/>You are now registered to AladdinB2B Portal.<br/><br/>We have added 12 free wishes to your account for your one month trial<br/><br/><br/>Thank you and happy matching!<br/>AladdinB2B`,
             };
 
             sgMail
