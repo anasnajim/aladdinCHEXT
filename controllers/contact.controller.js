@@ -543,8 +543,8 @@ exports.reqmeet = async (req, res) => {
 			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
 			bcc: em_bcc,
 			subject: "Request for a Meeting",
-			text: `Hi ${rname}, I noticed you have an impressive profile and I’d to talk to you about ${purpose}. I’m available in any of the following time slots: ${sched1}, ${sched2}, ${sched3} Looking forward to e-meeting you, ${valid_user.user_firstname} ${valid_user.user_lastname} ${valid_user.user_email}`,
-			html: `Hi ${rname},<br/><br/>I noticed you have an impressive profile and I’d to talk to you about ${purpose}.<br/><br/>I’m available in any of the following time slots:<br/><br/>${sched1}<br/>${sched2}<br/>${sched3}<br/><br/><br/>Looking forward to e-meeting you,<br/>${valid_user.user_firstname} ${valid_user.user_lastname}<br/>${valid_user.user_email}`,
+			text: `Hi ${rname}, I noticed you have an impressive profile and I’d to talk to you about ${purpose}. I’m available in any of the following time slots: ${sched1}, ${sched2}, ${sched3} Get your free meetings with Aladdin. Looking forward to e-meeting you, ${valid_user.user_firstname} ${valid_user.user_lastname} ${valid_user.user_email}`,
+			html: `Hi ${rname},<br/><br/>I noticed you have an impressive profile and I’d to talk to you about ${purpose}.<br/><br/>I’m available in any of the following time slots:<br/><br/>${sched1}<br/>${sched2}<br/>${sched3}<br/><br/>Get your free meetings with Aladdin.<br/><br/><br/>Looking forward to e-meeting you,<br/>${valid_user.user_firstname} ${valid_user.user_lastname}<br/>${valid_user.user_email}`,
 		};
 
 		sgMail
