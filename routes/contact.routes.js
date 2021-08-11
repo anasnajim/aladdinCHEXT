@@ -32,5 +32,8 @@ module.exports = app => {
 	// contact deep search
 	router.post("/deepsearch", token.authenticateToken, contact.deepsearch)
 
+	// meeting request
+	router.post("/reqmeet", token.authenticateToken, contact.reqmeet)
+
 	app.use('/api/contacts', router);
 };

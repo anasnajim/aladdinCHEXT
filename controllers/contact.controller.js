@@ -1,5 +1,9 @@
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
 const { sequelize } = require("../models");
 const models = require("../models");
+const User = models.user;
 const Contact = models.contact;
 const UserContact = models.user_contacts;
 const UserCredits = models.user_credits;
@@ -504,4 +508,65 @@ exports.deepsearch = async (req, res) => {
 
 
 
+};
+
+// meeting request
+exports.reqmeet = async (req, res) => {
+	try{
+        
+		const purpose = req.body.purose;
+		const remail = req.body.remail;
+		const rname = req.body.rname;
+		const sched1 = req.body.sched1;
+		const sched2 = req.body.sched2;
+		const sched3 = req.body.sched3;
+
+		// multiple emails
+		let em = remail.split(',');
+		let em_to = [];
+		if (em.length > 0) {
+			for (let x = 0; x < em.length; x++) {
+				em_to.push({ 'email' : em[x].trim() });
+			}
+		}
+
+		let em_bcc = [
+			{ 'email' : 'kurt@aladdinb2b.com'}
+		];
+
+		const valid_user = await User.findOne({ where: { id: req.user_id } });
+
+		const msg = {
+			to: em_to,
+			reply_to: valid_user.user_email,
+			from: process.env.SENDGRID_MAIL_PORTAL,
+			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
+			bcc: em_bcc,
+			subject: "Request for a Meeting",
+			text: `Hi ${rname}, I noticed you have an impressive profile and I’d to talk to you about ${purpose}. I’m available in any of the following time slots: ${sched1}, ${sched2}, ${sched3} Looking forward to e-meeting you, ${valid_user.user_firstname} ${valid_user.user_lastname} ${valid_user.user_email}`,
+			html: `Hi ${rname},<br/><br/>I noticed you have an impressive profile and I’d to talk to you about ${purpose}.<br/><br/>I’m available in any of the following time slots:<br/><br/>${sched1}<br/>${sched2}<br/>${sched3}<br/><br/><br/>Looking forward to e-meeting you,<br/>${valid_user.user_firstname} ${valid_user.user_lastname}<br/>${valid_user.user_email}`,
+		};
+
+		sgMail
+		.send(msg)
+		.then( (response) => {
+			if(response[0].statusCode === 202){
+				res.send({ reqmeet: 'Meeting request sent successfully!' });
+			}else{
+				res.status(500).send({
+					message:
+						err.message || "Error requesting meeting!"
+				});
+			}   
+		})
+		.catch((error) => {
+			console.error(error)
+		});
+
+    }catch(err){
+        res.status(500).send({
+            message:
+                err.message || "Error requesting meeting!"
+        });
+    }
 };
