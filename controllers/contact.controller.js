@@ -416,8 +416,8 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 
-					free_wish.used_credits += 1;
-					free_wish.save();
+					referral_wish.used_credits += 1;
+					referral_wish.save();
 
 					// set access type: 1 - referral
 					await UserContact.update({
