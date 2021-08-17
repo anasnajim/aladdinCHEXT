@@ -142,7 +142,7 @@ exports.login = async (req, res) => {
 
         if (!req.body.user_password) {
             res.status(400).send({
-                message: "User password required!x"
+                message: "User password required!"
             });
             return;
         }
