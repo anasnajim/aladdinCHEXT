@@ -12,7 +12,6 @@ module.exports = (sequelize, Sequelize) => {
                 notNull: {
                     msg: "Invalid email address!"
                 },
-                notEmpty: true
             }
         },
         user_password: {
@@ -21,9 +20,6 @@ module.exports = (sequelize, Sequelize) => {
             validate: {
                 notNull: {
                     msg: "Invalid user password!"
-                },
-                notEmpty: {
-                    msg: "User password required!"
                 },
                 len: {
                     args: [8, 1024],
@@ -38,13 +34,14 @@ module.exports = (sequelize, Sequelize) => {
                 notNull: {
                     msg: "Invalid user first name!"
                 },
-                notEmpty: true,
+                notEmpty: {
+					msg: "Invalid user first name!"
+				},
                 len: {
-                    args: [1, 255],
+                    args: [0, 255],
                     msg: "User first name too long!"
                 }
             },
-            msg: "User first name required!"
         },
         user_lastname: {
             type: Sequelize.STRING,
@@ -53,13 +50,14 @@ module.exports = (sequelize, Sequelize) => {
                 notNull: {
                     msg: "Invalid user last name!"
                 },
-                notEmpty: true,
+                notEmpty: {
+					msg: "Invalid user last name!"
+				},
                 len: {
-                    args: [1, 255],
+                    args: [0, 255],
                     msg: "User last name too long!"
                 }
             },
-            msg: "User last name required!"
         },
         user_department: {
             type: Sequelize.INTEGER,
@@ -72,7 +70,6 @@ module.exports = (sequelize, Sequelize) => {
                     msg: "Invalid user department!"
                 }
             },
-            msg: "User department required!"
         }
     },{
         hooks: {
