@@ -16,23 +16,31 @@ if (dotenv.error) {
 const port = process.env.PORT;
 
 var allowedOrigins = [
+	'https://proud-river-05366fd10.azurestaticapps.net',
 	'http://192.168.59.128:8080',
 	'http://localhost:8080',
 	'https://wish.aladdinb2b.com'
 ];
 
 // middlewares
-app.use(cors({
-	origin: function(origin, callback){
-		if(!origin) return callback(null, true);
+// app.use(cors({
+// 	origin: function(origin, callback){
+// 		if(!origin) return callback(null, true);
 
-		if(allowedOrigins.indexOf(origin) === -1){	 
-		  let msg = 'The CORS policy for this site does not allow access from the specified Origin.';	 
-		  return callback(new Error(msg), false);	 
-		}	 
-		return callback(null, true);	 
-	  }
-}));
+// 		if(allowedOrigins.indexOf(origin) === -1){	 
+// 		  let msg = 'The CORS policy for this site does not allow access from the specified Origin.';	 
+// 		  return callback(new Error(msg), false);	 
+// 		}	 
+// 		return callback(null, true);	 
+// 	  }
+// }));
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
 app.use(express.json());
 
 // file hosting for app : disabled
