@@ -15,24 +15,10 @@ if (dotenv.error) {
 
 const port = process.env.PORT;
 
-var allowedOrigins = [
-	'https://proud-river-05366fd10.azurestaticapps.net',
-	'http://192.168.59.128:8080',
-	'http://localhost:8080',
-	'https://wish.aladdinb2b.com'
-];
-
 // middlewares
 app.use(cors({
-	origin: function(origin, callback){
-		if(!origin) return callback(null, true);
-
-		if(allowedOrigins.indexOf(origin) === -1){	 
-		  let msg = 'The CORS policy for this site does not allow access from the specified Origin.';	 
-		  return callback(new Error(msg), false);	 
-		}	 
-		return callback(null, true);	 
-	  }
+	origin: 'https://wish.aladdinb2b.com',
+	optionsSuccessStatus: 200
 }));
 
 app.use(express.json());
@@ -61,6 +47,6 @@ app.listen(port, () => {
 // main API route
 app.get('/', async (req, res) => {
 	res.json({
-		status: 'ALADDINB2B-CX API READY!'
+		status: 'ALADDIN Chrome Extension API READY!'
 	});
 });
