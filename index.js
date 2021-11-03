@@ -6,32 +6,20 @@ var path = require('path');
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const dotenv = require('dotenv').config()
 
+// const dotenv = require('dotenv').config()
 // .env check / logging
-if (dotenv.error) {
-	throw dotenv.error
-}
+// if (dotenv.error) {
+// 	throw dotenv.error
+// }
 
 const port = process.env.PORT;
 
 // cors options
-const whitelist = ['https://wish.aladdinb2b.com']
-const corsOptions = {
-	origin: function (origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) {
-			callback(null, true)
-		} else {
-			callback(new Error('Not allowed by CORS'))
-		}
-	},
-	methods: ['GET', 'POST'],
-	credentials: true
-}
-
+const allowOrigin = '*';
 
 // middlewares
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
 app.use(function (req, res, next) {
