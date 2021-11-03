@@ -1,8 +1,8 @@
 {
   "name": "auth-app-server",
   "version": "1.0.0",
-  "description": "test nodejs server for chrome plugin",
-  "main": "appServer.js",
+  "description": "api for chrome extension",
+  "main": "index.js",
   "scripts": {
     "dev": "nodemon index.js",
     "app-server": "node index.js",
