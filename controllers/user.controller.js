@@ -36,7 +36,7 @@ exports.credits = async (req, res) => {
             where: {
                 user_id: req.user_id,
                 [Op.and]: [
-                    literal(`createdAt + INTERVAL 90 day >= now()`)
+                    literal(`"createdAt" + INTERVAL '90 days' >= now()`)
                 ]
             }
         });
@@ -61,7 +61,7 @@ exports.weekly = async(req, res) => {
             where: {
                 user_id: req.user_id,
                 [Op.and]: [
-                    literal(`week_usage = WEEK(now())`)
+                    literal(`week_usage = DATE_PART('week', now())`)
                 ]
             }
         });

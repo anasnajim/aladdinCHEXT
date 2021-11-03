@@ -152,8 +152,8 @@ exports.search = async (req, res) => {
 	}
 
 	try {
-		let name = (req.body.name).toLowerCase();
-		let company = (req.body.company).toLowerCase();
+		let name = (req.body.name).toLowerCase().trim();
+		let company = (req.body.company).toLowerCase().trim();
 
 		const contact = await Contact.findOne({
 			where: {
@@ -290,8 +290,8 @@ exports.paidsearch = async (req, res) => {
 	}
 
 	try {
-		let name = (req.body.name).toLowerCase();
-		let company = (req.body.company).toLowerCase();
+		let name = (req.body.name).toLowerCase().trim();
+		let company = (req.body.company).toLowerCase().trim();
 
 		const contact = await Contact.findOne({
 			where: {
@@ -341,7 +341,7 @@ exports.paidsearch = async (req, res) => {
 							[Op.lt]: col('credits')
 						},
 						[Op.and]: [
-							literal(`createdAt + INTERVAL 90 day >= now()`)
+							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
 						]
 					},
 					order: [
@@ -357,7 +357,7 @@ exports.paidsearch = async (req, res) => {
 							[Op.lt]: col('credits')
 						},
 						[Op.and]: [
-							literal(`createdAt + INTERVAL 90 day >= now()`)
+							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
 						]
 					},
 					order: [
@@ -373,7 +373,7 @@ exports.paidsearch = async (req, res) => {
 							[Op.lt]: col('credits')
 						},
 						[Op.and]: [
-							literal(`createdAt + INTERVAL 90 day >= now()`)
+							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
 						]
 					},
 					order: [
@@ -468,7 +468,7 @@ exports.paidsearch = async (req, res) => {
 			if(wish_usage){
 				const usage_info = {
 					user_id: req.user_id,
-					week_usage: literal(`week(now())`)
+					week_usage: literal(`DATE_PART('week', now())`)
 				};
 				await UserUsages.create(usage_info);
 			}

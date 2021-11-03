@@ -16,7 +16,7 @@ module.exports = app => {
                 LEFT JOIN user_credits ON users.id = user_credits.user_id 
                 WHERE used_credits < credits 
                 AND credit_type in ('trial', 'referral', 'paid')
-                AND DATEDIFF(user_credits.createdAt + INTERVAL 80 DAY, NOW()) <= 10
+                AND DATEDIFF(user_credits.createdAt + INTERVAL '80 DAYS', NOW()) <= 10
         `, { type: models.sequelize.QueryTypes.SELECT });
 
         let recipients = [];

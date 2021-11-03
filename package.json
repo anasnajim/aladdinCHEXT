@@ -4,9 +4,13 @@
   "description": "test nodejs server for chrome plugin",
   "main": "appServer.js",
   "scripts": {
-    "dev": "nodemon appServer.js",
-    "app-server": "node appServer.js",
-	"start": "node appServer.js"
+    "dev": "nodemon index.js",
+    "app-server": "node index.js",
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": "16.x",
+	"npm": "7.x"
   },
   "keywords": [
     "nodejs",
