@@ -14,6 +14,11 @@ const fn = models.Sequelize.fn;
 const col = models.Sequelize.col;
 const literal = models.Sequelize.literal;
 
+const PER_MAKE_WISH = parseInt(process.env.PER_MAKE_WISH);
+const PER_MEET_REQUEST = parseInt(process.env.PER_MEET_REQUEST);
+const PER_MEET_VID_CALL = parseInt(process.env.PER_MEET_VID_CALL);
+const PER_MEET_ALADDIN_HUB = parseInt(process.env.PER_MEET_ALADDIN_HUB);
+
 // find Contact by id
 exports.findOne = async (req, res) => {
 	const id = req.params.id;
@@ -274,7 +279,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 
-					free_wish.used_credits += process.env.PER_MAKE_WISH;
+					free_wish.used_credits += PER_MAKE_WISH;
 					free_wish.save();
 
 					// set access type: 0 - trial
@@ -298,7 +303,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 
-					referral_wish.used_credits += process.env.PER_MAKE_WISH;
+					referral_wish.used_credits += PER_MAKE_WISH;
 					referral_wish.save();
 
 					// set access type: 1 - referral
@@ -322,7 +327,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 					
-					paid_wish.used_credits += process.env.PER_MAKE_WISH;
+					paid_wish.used_credits += PER_MAKE_WISH;
 					paid_wish.save();
 
 					// set access type: 2 - paid
@@ -445,8 +450,8 @@ exports.reqmeet = async (req, res) => {
 			]
 		});
 
-		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - parseInt(process.env.PER_MEET_REQUEST)) >= 0) {
-			free_wish.used_credits += process.env.PER_MEET_REQUEST;
+		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
+			free_wish.used_credits += PER_MEET_REQUEST;
 			free_wish.save();
 		}else{
 			res.status(500).send({
