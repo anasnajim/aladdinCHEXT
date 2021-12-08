@@ -36,7 +36,7 @@ exports.credits = async (req, res) => {
             where: {
                 user_id: req.user_id,
                 [Op.and]: [
-                    literal(`"createdAt" + INTERVAL '90 days' >= now()`)
+                    literal(`"createdAt" + INTERVAL '14 days' >= now()`)
                 ]
             }
         });

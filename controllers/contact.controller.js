@@ -14,51 +14,6 @@ const fn = models.Sequelize.fn;
 const col = models.Sequelize.col;
 const literal = models.Sequelize.literal;
 
-// create/save Contact model
-// exports.create = async (req, res) => {
-// 	if (!req.body.name) {
-// 		res.status(400).send({
-// 			message: "Contact name required!"
-// 		});
-// 		return;
-// 	}
-
-// 	const contact = {
-// 		name: req.body.name,
-// 		profile: req.body.profile,
-// 		email: req.body.email,
-// 		phone: req.body.phone
-// 	};
-
-// 	await Contact.create(contact)
-// 		.then(data => {
-// 			res.send(data);
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message:
-// 					err.message || "Error saving contact."
-// 			});
-// 		});
-// };
-
-// get all Contact records
-// exports.findAll = async (req, res) => {
-// 	const name = req.query.name;
-// 	var filter = name ? { name: { [Op.like]: `%${name}%` } } : null;
-
-// 	await Contact.findAll({ where: filter })
-// 		.then(data => {
-// 			res.send(data);
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message:
-// 					err.message || "Error retrieving contact."
-// 			});
-// 		});
-// };
-
 // find Contact by id
 exports.findOne = async (req, res) => {
 	const id = req.params.id;
@@ -73,73 +28,6 @@ exports.findOne = async (req, res) => {
 			});
 		});
 };
-
-// update Contact by id
-// exports.update = async (req, res) => {
-// 	const id = req.params.id;
-
-// 	await Contact.update(req.body, {
-// 		where: { id: id }
-// 	})
-// 		.then(num => {
-// 			if (num == 1) {
-// 				res.send({
-// 					message: "Contact updated successfully."
-// 				});
-// 			} else {
-// 				res.send({
-// 					message: `Error updating Contact by id=${id}. Contact ID not found.`
-// 				});
-// 			}
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message: "Error updating Contact by id=" + id
-// 			});
-// 		});
-// };
-
-// delete Contact by id
-// exports.delete = async (req, res) => {
-// 	const id = req.params.id;
-
-// 	await Contact.destroy({
-// 		where: { id: id }
-// 	})
-// 		.then(num => {
-// 			if (num == 1) {
-// 				res.send({
-// 					message: "Contact successfully deleted!"
-// 				});
-// 			} else {
-// 				res.send({
-// 					message: `Error deleting Contact by id=${id}. Contact ID not found.`
-// 				});
-// 			}
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message: "Error deleting Contact by id=" + id
-// 			});
-// 		});
-// };
-
-// delete ALL contact records
-// exports.deleteAll = (req, res) => {
-// 	Contact.destroy({
-// 		where: {},
-// 		truncate: false
-// 	})
-// 		.then(nums => {
-// 			res.send({ message: `${nums} Contacts successfully deleted!` });
-// 		})
-// 		.catch(err => {
-// 			res.status(500).send({
-// 				message:
-// 					err.message || "Error deleting all Contact(s)"
-// 			});
-// 		});
-// };
 
 // search specific contact record by name
 exports.search = async (req, res) => {
@@ -182,7 +70,7 @@ exports.search = async (req, res) => {
 			return;
 		} else {
 
-			let secureEmail = await function (email) {
+			let secureEmail = function (email) {
 				if (!email) return "";
 				return email.replace(/(.{0})(.*)(?=@)/,
 					function (match, result, orig) {
@@ -192,7 +80,7 @@ exports.search = async (req, res) => {
 					});
 			};
 
-			let securePhone = await function (phone) {
+			let securePhone = function (phone) {
 				if (!phone) return "";
 				return phone.slice(0, parseInt(phone.length / 2)) + "*".repeat(parseInt(phone.length / 2));
 			}
@@ -341,7 +229,7 @@ exports.paidsearch = async (req, res) => {
 							[Op.lt]: col('credits')
 						},
 						[Op.and]: [
-							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
+							literal(`"createdAt" + INTERVAL '14 days' >= now()`)
 						]
 					},
 					order: [
@@ -355,10 +243,7 @@ exports.paidsearch = async (req, res) => {
 						credit_type: 'referral',
 						used_credits: {
 							[Op.lt]: col('credits')
-						},
-						[Op.and]: [
-							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
-						]
+						}
 					},
 					order: [
 						['id', 'ASC']
@@ -371,10 +256,7 @@ exports.paidsearch = async (req, res) => {
 						credit_type: 'paid',
 						used_credits: {
 							[Op.lt]: col('credits')
-						},
-						[Op.and]: [
-							literal(`"createdAt" + INTERVAL '90 days' >= now()`)
-						]
+						}
 					},
 					order: [
 						['id', 'ASC']
@@ -392,7 +274,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 
-					free_wish.used_credits += 1;
+					free_wish.used_credits += process.env.PER_MAKE_WISH;
 					free_wish.save();
 
 					// set access type: 0 - trial
@@ -416,7 +298,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 
-					referral_wish.used_credits += 1;
+					referral_wish.used_credits += process.env.PER_MAKE_WISH;
 					referral_wish.save();
 
 					// set access type: 1 - referral
@@ -440,7 +322,7 @@ exports.paidsearch = async (req, res) => {
 						return;
 					}
 					
-					paid_wish.used_credits += 1;
+					paid_wish.used_credits += process.env.PER_MAKE_WISH;
 					paid_wish.save();
 
 					// set access type: 2 - paid
