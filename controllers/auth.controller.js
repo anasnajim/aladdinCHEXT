@@ -62,7 +62,7 @@ exports.register = async (req, res) => {
 
                     const user_ref_credits = {
                         user_id: ref_source_user.id,
-                        credits: process.env.MAX_ADD_REFERRAL,
+                        credits: process.env.MAX_ADD_REFERRAL * process.env.PER_WISH_CREDITS,
                         used_credits: 0,
                         credit_type: 'referral'
                     };
@@ -73,7 +73,7 @@ exports.register = async (req, res) => {
 
             const user_trial_credits = {
                 user_id: new_user.id,
-                credits: process.env.MAX_ADD_TRIAL,
+                credits: process.env.MAX_ADD_TRIAL * process.env.PER_WISH_CREDITS,
                 used_credits: 0,
                 credit_type: 'trial'
             };
@@ -89,8 +89,8 @@ exports.register = async (req, res) => {
                 to: new_user.user_email,
                 from: process.env.SENDGRID_MAIL_PORTAL,
                 subject: process.env.ALADDINB2B_SIGNUP_SUBJ,
-                text: `Dear ${user.user_firstname} ${user.user_lastname}, You are now registered to AladdinB2B portal. We have added 12 free wishes to your account for your one month trial. Thank you and happy matching! AladdinB2B`,
-                html: `Dear ${user.user_firstname} ${user.user_lastname},<br/><br/>You are now registered to AladdinB2B Portal.<br/><br/>We have added 12 free wishes to your account for your one month trial<br/><br/><br/>Thank you and happy matching!<br/>AladdinB2B`,
+                text: `Dear ${user.user_firstname} ${user.user_lastname}, You are now registered to AladdinB2B portal. We have added free 30 credits to your account for your 14 days trial. Thank you and happy matching! AladdinB2B`,
+                html: `Dear ${user.user_firstname} ${user.user_lastname},<br/><br/>You are now registered to AladdinB2B Portal.<br/><br/>We have added free 30 credits to your account for your 14 days trial<br/><br/><br/>Thank you and happy matching!<br/>AladdinB2B`,
             };
 
             sgMail
