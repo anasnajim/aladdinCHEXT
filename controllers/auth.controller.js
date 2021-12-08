@@ -62,7 +62,7 @@ exports.register = async (req, res) => {
 
                     const user_ref_credits = {
                         user_id: ref_source_user.id,
-                        credits: process.env.MAX_ADD_REFERRAL * process.env.PER_WISH_CREDITS,
+                        credits: process.env.MAX_ADD_REFERRAL * process.env.WISH_CREDITS,
                         used_credits: 0,
                         credit_type: 'referral'
                     };
@@ -73,7 +73,7 @@ exports.register = async (req, res) => {
 
             const user_trial_credits = {
                 user_id: new_user.id,
-                credits: process.env.MAX_ADD_TRIAL * process.env.PER_WISH_CREDITS,
+                credits: process.env.MAX_ADD_TRIAL * process.env.WISH_CREDITS,
                 used_credits: 0,
                 credit_type: 'trial'
             };
