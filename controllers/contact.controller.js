@@ -429,6 +429,33 @@ exports.reqmeet = async (req, res) => {
 			html: `Hi ${rname},<br/><br/>I noticed you have an impressive profile and I’d to talk to you about ${purpose}.<br/><br/>I’m available in any of the following time slots:<br/><br/>${sched1}<br/>${sched2}<br/>${sched3}<br/><br/>Get your free meetings with Aladdin.<br/><br/><br/>Looking forward to e-meeting you,<br/>${valid_user.user_firstname} ${valid_user.user_lastname}<br/>${valid_user.user_email}`,
 		};
 
+		let free_wish = await UserCredits.findOne({
+			where: {
+				user_id: req.user_id,
+				credit_type: 'trial',
+				used_credits: {
+					[Op.lt]: col('credits')
+				},
+				[Op.and]: [
+					literal(`"createdAt" + INTERVAL '14 days' >= now()`)
+				]
+			},
+			order: [
+				['id', 'ASC']
+			]
+		});
+
+		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - process.env.PER_MEET_REQUEST) >= 0) {
+			free_wish.used_credits += process.env.PER_MEET_REQUEST;
+			free_wish.save();
+			wish_usage = true;
+		}else{
+			res.status(500).send({
+				message:
+					err.message || "Meeting request unsuccessful. You have insufficient credits."
+			});
+		}
+
 		sgMail
 		.send(msg)
 		.then( (response) => {
