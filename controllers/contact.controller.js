@@ -445,14 +445,12 @@ exports.reqmeet = async (req, res) => {
 			]
 		});
 
-		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - process.env.PER_MEET_REQUEST) >= 0) {
+		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - parseInt(process.env.PER_MEET_REQUEST)) >= 0) {
 			free_wish.used_credits += process.env.PER_MEET_REQUEST;
 			free_wish.save();
-			wish_usage = true;
 		}else{
 			res.status(500).send({
-				message:
-					err.message || "Meeting request unsuccessful. You have insufficient credits."
+				message: "Meeting request unsuccessful. You have insufficient credits."
 			});
 		}
 
@@ -463,19 +461,19 @@ exports.reqmeet = async (req, res) => {
 				res.send({ reqmeet: 'Meeting request sent successfully!' });
 			}else{
 				res.status(500).send({
-					message:
-						err.message || "Error requesting meeting!"
+					message: "Meeting request unsuccessful. Please try again."
 				});
 			}   
 		})
 		.catch((error) => {
-			console.error(error)
+			res.status(500).send({
+				message: "Meeting request unsuccessful. Please try again."
+			});
 		});
 
     }catch(err){
         res.status(500).send({
-            message:
-                err.message || "Error requesting meeting!"
+			message: "Meeting request unsuccessful. Please try again."
         });
     }
 };
