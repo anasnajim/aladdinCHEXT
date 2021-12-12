@@ -401,7 +401,7 @@ exports.deepsearch = async (req, res) => {
 exports.reqmeet = async (req, res) => {
 	try{
         
-		const purpose = req.body.purose;
+		const purpose = req.body.purpose;
 		const remail = req.body.remail;
 		const rname = req.body.rname;
 		const sched1 = req.body.sched1;
