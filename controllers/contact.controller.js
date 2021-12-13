@@ -452,7 +452,6 @@ exports.reqmeet = async (req, res) => {
 
 		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
 			free_wish.used_credits += PER_MEET_REQUEST;
-			free_wish.save();
 		}else{
 			res.status(500).send({
 				message: "Meeting request unsuccessful. You have insufficient credits."
@@ -463,6 +462,7 @@ exports.reqmeet = async (req, res) => {
 		.send(msg)
 		.then( (response) => {
 			if(response[0].statusCode === 202){
+				free_wish.save();
 				res.send({ reqmeet: 'Meeting request sent successfully!' });
 			}else{
 				res.status(500).send({
