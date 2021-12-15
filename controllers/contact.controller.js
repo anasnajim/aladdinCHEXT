@@ -1,5 +1,8 @@
+const moment = require('moment-timezone');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const sys_timezone = "Asia/Dubai";
 
 const { sequelize } = require("../models");
 const models = require("../models");
@@ -98,7 +101,7 @@ exports.search = async (req, res) => {
 			});
 
 			// multiple email
-			if(contact.email === null){
+			if (contact.email === null) {
 				contact.email = "";
 			}
 			let em = contact.email.split(',');
@@ -113,7 +116,7 @@ exports.search = async (req, res) => {
 			}
 
 			// multiple phone
-			if(contact.phone === null){
+			if (contact.phone === null) {
 				contact.phone = "";
 			}
 			let phone = contact.phone.split(',');
@@ -128,7 +131,7 @@ exports.search = async (req, res) => {
 			}
 
 			// multiple tel
-			if(contact.tel === null){
+			if (contact.tel === null) {
 				contact.tel = "";
 			}
 			let tel = contact.tel.split(',');
@@ -270,7 +273,7 @@ exports.paidsearch = async (req, res) => {
 
 				// @todo - non-hardcoded access_types from table: user_access_types
 				if (free_wish !== null) {
-					
+
 					let new_user_contact = await UserContact.create(user_contact);
 					if (!new_user_contact) {
 						res.status(500).send({
@@ -326,7 +329,7 @@ exports.paidsearch = async (req, res) => {
 						});
 						return;
 					}
-					
+
 					paid_wish.used_credits += PER_MAKE_WISH;
 					paid_wish.save();
 
@@ -341,7 +344,7 @@ exports.paidsearch = async (req, res) => {
 
 					wish_usage = true;
 
-				}else{
+				} else {
 					// no free and paid wish credits
 					// return blanks
 					res.send({
@@ -352,7 +355,7 @@ exports.paidsearch = async (req, res) => {
 				}
 			}
 
-			if(wish_usage){
+			if (wish_usage) {
 				const usage_info = {
 					user_id: req.user_id,
 					week_usage: literal(`DATE_PART('week', now())`)
@@ -399,27 +402,76 @@ exports.deepsearch = async (req, res) => {
 
 // meeting request
 exports.reqmeet = async (req, res) => {
-	try{
-        
+	try {
+
+		const site = 'https://wish.aladdinb2b.com';
+		
+		const photolink = req.body.photo ? req.body.photo : '';
 		const purpose = req.body.purpose;
+		const others = req.body.others ? req.body.others : '[-x-]';
 		const remail = req.body.remail;
 		const rname = req.body.rname;
+		const rwork = req.body.rwork ? req.body.rwork : '[-x-]';
 		const sched1 = req.body.sched1;
 		const sched2 = req.body.sched2;
 		const sched3 = req.body.sched3;
+
+		// save date-time in UTC
+		// display in User TZ settings
+
+		const em_sched1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+		const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
+		const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+
+		const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
+		const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
+		const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
+
+		const params1 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched1_date,
+			em_sched1_time,
+			photolink
+		];
+
+		const params2 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched2_date,
+			em_sched2_time,
+			photolink
+		];
+
+		const params3 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched3_date,
+			em_sched3_time,
+			photolink
+		];
+
+		let encoded_params1 = btoa(params1.join('||||'));
+		let encoded_params2 = btoa(params2.join('||||'));
+		let encoded_params3 = btoa(params3.join('||||'));
 
 		// multiple emails
 		let em = remail.split(',');
 		let em_to = [];
 		if (em.length > 0) {
 			for (let x = 0; x < em.length; x++) {
-				em_to.push({ 'email' : em[x].trim() });
+				em_to.push({ 'email': em[x].trim() });
 			}
 		}
-
-		let em_bcc = [
-			{ 'email' : 'kurt@aladdinb2b.com'}
-		];
 
 		const valid_user = await User.findOne({ where: { id: req.user_id } });
 
@@ -428,10 +480,41 @@ exports.reqmeet = async (req, res) => {
 			reply_to: valid_user.user_email,
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
-			// bcc: em_bcc,
 			subject: "Request for a Meeting",
-			text: `Hi ${rname}, I noticed you have an impressive profile and I’d to talk to you about ${purpose}. I’m available in any of the following time slots: ${sched1}, ${sched2}, ${sched3} Get your free meetings with Aladdin. Looking forward to e-meeting you, ${valid_user.user_firstname} ${valid_user.user_lastname} ${valid_user.user_email}`,
-			html: `Hi ${rname},<br/><br/>I noticed you have an impressive profile and I’d to talk to you about ${purpose}.<br/><br/>I’m available in any of the following time slots:<br/><br/>${sched1}<br/>${sched2}<br/>${sched3}<br/><br/>Get your free meetings with Aladdin.<br/><br/><br/>Looking forward to e-meeting you,<br/>${valid_user.user_firstname} ${valid_user.user_lastname}<br/>${valid_user.user_email}`,
+			html: `
+	<div>
+		<div style="margin-bottom: 20px;"></div>
+		<div style="padding: 20px;width: 450px;height: 500px;	background: #FFFFFF;border: 1px solid #CED6E0;box-sizing: border-box;border-radius: 5px;font-family: Barlow;font-style: normal;font-weight: normal;font-size: 14px;line-height: 18px;color: #24292E;">
+			<div>
+				<div style="font-family: Barlow;font-style: normal;font-weight: 600;font-size: 14px;line-height: 24px;display: flex;align-items: center;color: #24292E;">Meeting Request</div>				
+				<div style="width: 400px;border: 1px solid #CED6E0;margin: 12px 0px 25px 0px;"></div>
+			</div>
+			<div>
+				<div style="margin-bottom: 20px;">Hi ${rname},</div>
+				<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I’d like to talk to you about ${purpose}.</div>
+				<div style="margin-bottom: 40px;">I’m available in any of the following time slots:</div>
+			</div>
+			<div>
+				<div style="margin-bottom: 20px;">
+					Date:<span style="margin-left: 10px;"></span>${em_sched1_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched1_time}</span>
+					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params1}" target="_blank">Pick</a></span>
+				</div>
+				<div style="margin-bottom: 20px;">
+					Date:<span style="margin-left: 10px;"></span>${em_sched2_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched2_time}</span>
+					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params2}" target="_blank">Pick</a></span>
+				</div>
+				<div style="margin-bottom: 20px;">
+					Date:<span style="margin-left: 10px;"></span>${em_sched3_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched3_time}</span>
+					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params3}" target="_blank">Pick</a></span>
+				</div>
+			</div>
+			<div style="margin: 40px 0px 0px 0px;">
+				<div>Sincerely,</div>
+				<div>${valid_user.user_firstname} ${valid_user.user_lastname}</div>
+			</div>
+		</div>
+	</div>		
+			`,
 		};
 
 		let free_wish = await UserCredits.findOne({
@@ -452,33 +535,36 @@ exports.reqmeet = async (req, res) => {
 
 		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
 			free_wish.used_credits += PER_MEET_REQUEST;
-		}else{
+		} else {
 			res.status(500).send({
 				message: "Meeting request unsuccessful. You have insufficient credits."
 			});
 		}
 
 		sgMail
-		.send(msg)
-		.then( (response) => {
-			if(response[0].statusCode === 202){
-				free_wish.save();
-				res.send({ reqmeet: 'Meeting request sent successfully!' });
-			}else{
+			.send(msg)
+			.then((response) => {
+				if (response[0].statusCode === 202) {
+					free_wish.save();
+					res.send({ reqmeet: 'Meeting request sent successfully!' });
+				} else {
+					console.log(response)
+					res.status(500).send({
+						message: "Meeting request unsuccessful. Please try again."
+					});
+				}
+			})
+			.catch((error) => {
+				console.log(error)
 				res.status(500).send({
 					message: "Meeting request unsuccessful. Please try again."
 				});
-			}   
-		})
-		.catch((error) => {
-			res.status(500).send({
-				message: "Meeting request unsuccessful. Please try again."
 			});
-		});
 
-    }catch(err){
-        res.status(500).send({
+	} catch (err) {
+		console.log(err)
+		res.status(500).send({
 			message: "Meeting request unsuccessful. Please try again."
-        });
-    }
+		});
+	}
 };

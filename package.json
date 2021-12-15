@@ -10,7 +10,7 @@
   },
   "engines": {
     "node": "16.x",
-	"npm": "7.x"
+    "npm": "7.x"
   },
   "keywords": [
     "nodejs",
@@ -39,6 +39,8 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.34",
     "mysql2": "^2.2.5",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
