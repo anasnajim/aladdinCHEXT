@@ -563,7 +563,7 @@ exports.reqmeet = async (req, res) => {
 				console.log(error)
 				res.status(500).send({
 					// message: "Meeting request unsuccessful. Please try again."
-					message: response
+					message: error
 				});
 			});
 
@@ -571,7 +571,7 @@ exports.reqmeet = async (req, res) => {
 		console.log(err)
 		res.status(500).send({
 			// message: "Meeting request unsuccessful. Please try again."
-			message: response
+			message: err
 		});
 	}
 };
