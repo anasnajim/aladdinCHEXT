@@ -406,7 +406,7 @@ exports.reqmeet = async (req, res) => {
 
 		const site = 'https://wish.aladdinb2b.com';
 		
-		const photolink = req.body.photo ? req.body.photo : '';
+		const photolink = req.body.uphoto ? req.body.uphoto : '';
 		const purpose = req.body.purpose;
 		const others = req.body.others ? req.body.others : '[-x-]';
 		const remail = req.body.remail;
