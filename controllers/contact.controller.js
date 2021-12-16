@@ -423,6 +423,10 @@ exports.reqmeet = async (req, res) => {
 		const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
 		const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
 
+		const em_send1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY");
+		const em_send2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY");
+		const em_send3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY");
+
 		const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
 		const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
 		const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
@@ -491,20 +495,20 @@ exports.reqmeet = async (req, res) => {
 			</div>
 			<div>
 				<div style="margin-bottom: 20px;">Hi ${rname},</div>
-				<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I’d like to talk to you about ${purpose}.</div>
+				<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I&apos;d like to talk to you about ${purpose}.</div>
 				<div style="margin-bottom: 40px;">I’m available in any of the following time slots:</div>
 			</div>
 			<div>
 				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_sched1_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched1_time}</span>
+					Date:<span style="margin-left: 10px;"></span>${em_send1_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched1_time}</span>
 					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params1}" target="_blank">Pick</a></span>
 				</div>
 				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_sched2_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched2_time}</span>
+					Date:<span style="margin-left: 10px;"></span>${em_send2_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched2_time}</span>
 					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params2}" target="_blank">Pick</a></span>
 				</div>
 				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_sched3_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched3_time}</span>
+					Date:<span style="margin-left: 10px;"></span>${em_send3_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched3_time}</span>
 					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params3}" target="_blank">Pick</a></span>
 				</div>
 			</div>
