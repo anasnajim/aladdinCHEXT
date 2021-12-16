@@ -554,21 +554,24 @@ exports.reqmeet = async (req, res) => {
 				} else {
 					console.log(response)
 					res.status(500).send({
-						message: "Meeting request unsuccessful. Please try again."
+						// message: "Meeting request unsuccessful. Please try again."
+						message: response
 					});
 				}
 			})
 			.catch((error) => {
 				console.log(error)
 				res.status(500).send({
-					message: "Meeting request unsuccessful. Please try again."
+					// message: "Meeting request unsuccessful. Please try again."
+					message: response
 				});
 			});
 
 	} catch (err) {
 		console.log(err)
 		res.status(500).send({
-			message: "Meeting request unsuccessful. Please try again."
+			// message: "Meeting request unsuccessful. Please try again."
+			message: response
 		});
 	}
 };
