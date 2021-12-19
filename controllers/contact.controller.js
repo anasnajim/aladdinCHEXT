@@ -517,7 +517,7 @@ exports.reqmeet = async (req, res) => {
 		}
 
 		await sgMail.send(msg);
-		free_wish.save();
+		// free_wish.save();
 		res.send({ message: 'Meeting request sent successfully!' });
 
 	} catch (error) {
