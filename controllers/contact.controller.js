@@ -419,54 +419,54 @@ exports.reqmeet = async (req, res) => {
 		// save date-time in UTC
 		// display in User TZ settings
 
-		// const em_sched1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
-		// const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
-		// const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+		const em_sched1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+		const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
+		const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
 
-		// const em_send1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY");
-		// const em_send2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY");
-		// const em_send3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY");
+		const em_send1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY");
+		const em_send2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY");
+		const em_send3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY");
 
-		// const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
-		// const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
-		// const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
+		const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
+		const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
+		const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
 
-		// const params1 = [
-		// 	purpose,
-		// 	others,
-		// 	remail,
-		// 	rname,
-		// 	rwork,
-		// 	em_sched1_date,
-		// 	em_sched1_time,
-		// 	photolink
-		// ];
+		const params1 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched1_date,
+			em_sched1_time,
+			photolink
+		];
 
-		// const params2 = [
-		// 	purpose,
-		// 	others,
-		// 	remail,
-		// 	rname,
-		// 	rwork,
-		// 	em_sched2_date,
-		// 	em_sched2_time,
-		// 	photolink
-		// ];
+		const params2 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched2_date,
+			em_sched2_time,
+			photolink
+		];
 
-		// const params3 = [
-		// 	purpose,
-		// 	others,
-		// 	remail,
-		// 	rname,
-		// 	rwork,
-		// 	em_sched3_date,
-		// 	em_sched3_time,
-		// 	photolink
-		// ];
+		const params3 = [
+			purpose,
+			others,
+			remail,
+			rname,
+			rwork,
+			em_sched3_date,
+			em_sched3_time,
+			photolink
+		];
 
-		// let encoded_params1 = btoa(params1.join('||||'));
-		// let encoded_params2 = btoa(params2.join('||||'));
-		// let encoded_params3 = btoa(params3.join('||||'));
+		let encoded_params1 = btoa(params1.join('||||'));
+		let encoded_params2 = btoa(params2.join('||||'));
+		let encoded_params3 = btoa(params3.join('||||'));
 
 		// multiple emails
 		let em = remail.split(',');
@@ -485,7 +485,38 @@ exports.reqmeet = async (req, res) => {
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
 			subject: "Request for a Meeting",
-			html: `sending test email from api sites html side`
+			html: `<div>
+			<div style="margin-bottom: 20px;"></div>
+			<div style="padding: 20px;width: 450px;height: 500px;	background: #FFFFFF;border: 1px solid #CED6E0;box-sizing: border-box;border-radius: 5px;font-family: Barlow;font-style: normal;font-weight: normal;font-size: 14px;line-height: 18px;color: #24292E;">
+				<div>
+					<div style="font-family: Barlow;font-style: normal;font-weight: 600;font-size: 14px;line-height: 24px;display: flex;align-items: center;color: #24292E;">Meeting Request</div>				
+					<div style="width: 400px;border: 1px solid #CED6E0;margin: 12px 0px 25px 0px;"></div>
+				</div>
+				<div>
+					<div style="margin-bottom: 20px;">Hi ${rname},</div>
+					<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I would like to talk to you about ${purpose}.</div>
+					<div style="margin-bottom: 40px;">I'm available in any of the following time slots:</div>
+				</div>
+				<div>
+					<div style="margin-bottom: 20px;">
+						Date:<span style="margin-left: 10px;"></span>${em_send1_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched1_time}</span>
+						<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params1}" target="_blank">Pick</a></span>
+					</div>
+					<div style="margin-bottom: 20px;">
+						Date:<span style="margin-left: 10px;"></span>${em_send2_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched2_time}</span>
+						<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params2}" target="_blank">Pick</a></span>
+					</div>
+					<div style="margin-bottom: 20px;">
+						Date:<span style="margin-left: 10px;"></span>${em_send3_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched3_time}</span>
+						<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params3}" target="_blank">Pick</a></span>
+					</div>
+				</div>
+				<div style="margin: 40px 0px 0px 0px;">
+					<div>Sincerely,</div>
+					<div>${valid_user.user_firstname} ${valid_user.user_lastname}</div>
+				</div>
+			</div>
+		</div>`
 		};
 
 		sgMail
