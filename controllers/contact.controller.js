@@ -485,90 +485,33 @@ exports.reqmeet = async (req, res) => {
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
 			subject: "Request for a Meeting",
-			html: `
-	<div>
-		<div style="margin-bottom: 20px;"></div>
-		<div style="padding: 20px;width: 450px;height: 500px;	background: #FFFFFF;border: 1px solid #CED6E0;box-sizing: border-box;border-radius: 5px;font-family: Barlow;font-style: normal;font-weight: normal;font-size: 14px;line-height: 18px;color: #24292E;">
-			<div>
-				<div style="font-family: Barlow;font-style: normal;font-weight: 600;font-size: 14px;line-height: 24px;display: flex;align-items: center;color: #24292E;">Meeting Request</div>				
-				<div style="width: 400px;border: 1px solid #CED6E0;margin: 12px 0px 25px 0px;"></div>
-			</div>
-			<div>
-				<div style="margin-bottom: 20px;">Hi ${rname},</div>
-				<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I would like to talk to you about ${purpose}.</div>
-				<div style="margin-bottom: 40px;">I'm available in any of the following time slots:</div>
-			</div>
-			<div>
-				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_send1_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched1_time}</span>
-					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params1}" target="_blank">Pick</a></span>
-				</div>
-				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_send2_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched2_time}</span>
-					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params2}" target="_blank">Pick</a></span>
-				</div>
-				<div style="margin-bottom: 20px;">
-					Date:<span style="margin-left: 10px;"></span>${em_send3_date}<span style="margin-left: 40px; margin-right: 40px;">at</span>Time:<span style="margin-left: 10px;">${em_sched3_time}</span>
-					<span style="margin: 10px 0px 0px 30px; margin-left: 38px;width: 100px;"><a style="color: #ff681a; text-decoration: underline;" href="${site}/#/reqmeetaccept/${encoded_params3}" target="_blank">Pick</a></span>
-				</div>
-			</div>
-			<div style="margin: 40px 0px 0px 0px;">
-				<div>Sincerely,</div>
-				<div>${valid_user.user_firstname} ${valid_user.user_lastname}</div>
-			</div>
-		</div>
-	</div>		
-			`
+			html: `sending test email from api sites html side`
 		};
-
-		let free_wish = await UserCredits.findOne({
-			where: {
-				user_id: req.user_id,
-				credit_type: 'trial',
-				used_credits: {
-					[Op.lt]: col('credits')
-				},
-				[Op.and]: [
-					literal(`"createdAt" + INTERVAL '14 days' >= now()`)
-				]
-			},
-			order: [
-				['id', 'ASC']
-			]
-		});
-
-		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
-			free_wish.used_credits += PER_MEET_REQUEST;
-		} else {
-			res.status(500).send({
-				message: "Meeting request unsuccessful. You have insufficient credits."
-			});
-		}
 
 		sgMail
 			.send(msg)
 			.then((response) => {
 				if (response[0].statusCode === 202) {
-					free_wish.save();
 					res.send({ reqmeet: 'Meeting request sent successfully!' });
 				} else {
 					console.log(response)
 					res.status(500).send({
-						message: "Meeting request unsuccessful. Please try again."
+						message: "Meeting request unsuccessful. Please try again.1"
 					});
 				}
 			})
 			.catch((error) => {
 				console.log(error)
 				res.status(500).send({
-					message: "Meeting request unsuccessful. Please try again."
+					message: "Meeting request unsuccessful. Please try again.2"
 				});
 			});
 
 	} catch (err) {
 		console.log(err)
 		res.status(500).send({
-			message: "Meeting request unsuccessful. Please try again."
+			message: "Meeting request unsuccessful. Please try again.3",
+			err: err
 		});
 	}
 };
