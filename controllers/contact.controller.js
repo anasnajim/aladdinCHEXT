@@ -403,9 +403,20 @@ exports.deepsearch = async (req, res) => {
 // meeting request
 exports.reqmeet = async (req, res) => {
 	try {
+
+		const photolink = req.body.uphoto ? req.body.uphoto : '';
+		const purpose = req.body.purpose;
+		const others = req.body.others ? req.body.others : '[-x-]';
+		const remail = req.body.remail;
+		const rname = req.body.rname;
+		const rwork = req.body.rwork ? req.body.rwork : '[-x-]';
+		const sched1 = req.body.sched1;
+		const sched2 = req.body.sched2;
+		const sched3 = req.body.sched3;
+
 		const msg = {
-			to: 'kurt@aladdinb2b.com',
-			reply_to: 'kurt@aladdinb2b.com',
+			to: 'kurt@aladdinb2b.net',
+			reply_to: 'kurt@aladdinb2b.net',
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `test api server`,
 			subject: "Request for a Meeting",
@@ -420,21 +431,22 @@ exports.reqmeet = async (req, res) => {
 				} else {
 					console.log(response)
 					res.status(500).send({
-						message: "Meeting request unsuccessful. Please try again."
+						message: "Meeting request unsuccessful. Please try again.1"
 					});
 				}
 			})
 			.catch((error) => {
 				console.log(error)
 				res.status(500).send({
-					message: "Meeting request unsuccessful. Please try again."
+					message: "Meeting request unsuccessful. Please try again.2"
 				});
 			});
 
 	} catch (err) {
 		console.log(err)
 		res.status(500).send({
-			message: "Meeting request unsuccessful. Please try again."
+			message: "Meeting request unsuccessful. Please try again.3",
+			err: err
 		});
 	}
 };
