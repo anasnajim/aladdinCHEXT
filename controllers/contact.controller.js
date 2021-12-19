@@ -496,7 +496,7 @@ exports.reqmeet = async (req, res) => {
 			<div>
 				<div style="margin-bottom: 20px;">Hi ${rname},</div>
 				<div style="margin-bottom: 20px;">I noticed you have an impressive profile and I would like to talk to you about ${purpose}.</div>
-				<div style="margin-bottom: 40px;">I’m available in any of the following time slots:</div>
+				<div style="margin-bottom: 40px;">I'm available in any of the following time slots:</div>
 			</div>
 			<div>
 				<div style="margin-bottom: 20px;">
