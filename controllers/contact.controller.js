@@ -402,7 +402,7 @@ exports.deepsearch = async (req, res) => {
 
 // meeting request
 exports.reqmeet = async (req, res) => {
-	// try {
+	try {
 
 		const site = 'https://wish.aladdinb2b.com';
 		
@@ -492,6 +492,7 @@ exports.reqmeet = async (req, res) => {
 			.send(msg)
 			.then((response) => {
 				if (response[0].statusCode === 202) {
+					console.log('email sent succeessfully');
 					res.send({ reqmeet: 'Meeting request sent successfully!' });
 				} else {
 					console.log(response)
@@ -507,11 +508,11 @@ exports.reqmeet = async (req, res) => {
 				});
 			});
 
-	// } catch (err) {
-	// 	console.log(err)
-	// 	res.status(500).send({
-	// 		message: "Meeting request unsuccessful. Please try again.3",
-	// 		err: err
-	// 	});
-	// }
+	} catch (err) {
+		console.log(err)
+		res.status(500).send({
+			message: "Meeting request unsuccessful. Please try again.3",
+			err: err
+		});
+	}
 };
