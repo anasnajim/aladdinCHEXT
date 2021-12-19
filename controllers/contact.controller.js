@@ -479,6 +479,40 @@ exports.reqmeet = async (req, res) => {
 
 		const valid_user = await User.findOne({ where: { id: req.user_id } });
 
+		// TESTING
+		const msg = {
+			to: em_to,
+			reply_to: valid_user.user_email,
+			from: process.env.SENDGRID_MAIL_PORTAL,
+			fromname: `TEST FROM NAME ${process.env.SENDGRID_MAIL_PORTAL}`,
+			subject: "Request for a Meeting",
+			text: 'TEXT TEST EMAIL',
+			html: `HTML TEST EMAIL`
+		};
+
+		sgMail
+		.send(msg)
+		.then((response) => {
+			if (response[0].statusCode === 202) {
+				free_wish.save();
+				res.send({ reqmeet: 'Meeting request sent successfully!' });
+			} else {
+				console.log(response)
+				res.status(500).send({
+					message: "Meeting request unsuccessful. Please try again. L2"
+				});
+			}
+		})
+		.catch((error) => {
+			console.log(error)
+			res.status(500).send({
+				message: "Meeting request unsuccessful. Please try again. L3"
+			});
+		});
+
+		return;
+
+
 		const msg = {
 			to: em_to,
 			reply_to: valid_user.user_email,
