@@ -419,54 +419,54 @@ exports.reqmeet = async (req, res) => {
 		// save date-time in UTC
 		// display in User TZ settings
 
-		const em_sched1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
-		const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
-		const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+		// const em_sched1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
+		// const em_sched2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY.MMMM.dddd");
+		// const em_sched3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY.MMMM.dddd");
 
-		const em_send1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY");
-		const em_send2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY");
-		const em_send3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY");
+		// const em_send1_date = moment(sched1).tz(sys_timezone).format("M.D.YYYY");
+		// const em_send2_date = moment(sched2).tz(sys_timezone).format("M D.YYYY");
+		// const em_send3_date = moment(sched3).tz(sys_timezone).format("M.D.YYYY");
 
-		const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
-		const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
-		const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
+		// const em_sched1_time = moment(sched1).tz(sys_timezone).format("HH:mm a");
+		// const em_sched2_time = moment(sched2).tz(sys_timezone).format("HH:mm a");
+		// const em_sched3_time = moment(sched3).tz(sys_timezone).format("HH:mm a");
 
-		const params1 = [
-			purpose,
-			others,
-			remail,
-			rname,
-			rwork,
-			em_sched1_date,
-			em_sched1_time,
-			photolink
-		];
+		// const params1 = [
+		// 	purpose,
+		// 	others,
+		// 	remail,
+		// 	rname,
+		// 	rwork,
+		// 	em_sched1_date,
+		// 	em_sched1_time,
+		// 	photolink
+		// ];
 
-		const params2 = [
-			purpose,
-			others,
-			remail,
-			rname,
-			rwork,
-			em_sched2_date,
-			em_sched2_time,
-			photolink
-		];
+		// const params2 = [
+		// 	purpose,
+		// 	others,
+		// 	remail,
+		// 	rname,
+		// 	rwork,
+		// 	em_sched2_date,
+		// 	em_sched2_time,
+		// 	photolink
+		// ];
 
-		const params3 = [
-			purpose,
-			others,
-			remail,
-			rname,
-			rwork,
-			em_sched3_date,
-			em_sched3_time,
-			photolink
-		];
+		// const params3 = [
+		// 	purpose,
+		// 	others,
+		// 	remail,
+		// 	rname,
+		// 	rwork,
+		// 	em_sched3_date,
+		// 	em_sched3_time,
+		// 	photolink
+		// ];
 
-		let encoded_params1 = btoa(params1.join('||||'));
-		let encoded_params2 = btoa(params2.join('||||'));
-		let encoded_params3 = btoa(params3.join('||||'));
+		// let encoded_params1 = btoa(params1.join('||||'));
+		// let encoded_params2 = btoa(params2.join('||||'));
+		// let encoded_params3 = btoa(params3.join('||||'));
 
 		// multiple emails
 		let em = remail.split(',');
