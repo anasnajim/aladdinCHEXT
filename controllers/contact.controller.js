@@ -402,7 +402,7 @@ exports.deepsearch = async (req, res) => {
 
 // meeting request
 exports.reqmeet = async (req, res) => {
-	try {
+	// try {
 
 		const site = 'https://wish.aladdinb2b.com';
 		
@@ -507,11 +507,11 @@ exports.reqmeet = async (req, res) => {
 				});
 			});
 
-	} catch (err) {
-		console.log(err)
-		res.status(500).send({
-			message: "Meeting request unsuccessful. Please try again.3",
-			err: err
-		});
-	}
+	// } catch (err) {
+	// 	console.log(err)
+	// 	res.status(500).send({
+	// 		message: "Meeting request unsuccessful. Please try again.3",
+	// 		err: err
+	// 	});
+	// }
 };
