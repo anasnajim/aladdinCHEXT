@@ -1,9 +1,12 @@
+// initialize needed libraries
 const moment = require('moment-timezone');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+// timezone settings fixed (for now)
 const sys_timezone = "Asia/Dubai";
 
+// initialize models and Sequelize
 const { sequelize } = require("../models");
 const models = require("../models");
 const User = models.user;
@@ -17,6 +20,7 @@ const fn = models.Sequelize.fn;
 const col = models.Sequelize.col;
 const literal = models.Sequelize.literal;
 
+// initialize runtime variables for wish deductions
 const PER_MAKE_WISH = parseInt(process.env.PER_MAKE_WISH);
 const PER_MEET_REQUEST = parseInt(process.env.PER_MEET_REQUEST);
 const PER_MEET_VID_CALL = parseInt(process.env.PER_MEET_VID_CALL);
@@ -519,28 +523,53 @@ exports.reqmeet = async (req, res) => {
 		</div>`
 		};
 
+		let free_wish = await UserCredits.findOne({
+			where: {
+				user_id: req.user_id,
+				credit_type: 'trial',
+				used_credits: {
+					[Op.lt]: col('credits')
+				},
+				[Op.and]: [
+					literal(`"createdAt" + INTERVAL '14 days' >= now()`)
+				]
+			},
+			order: [
+				['id', 'ASC']
+			]
+		});
+
+		if (free_wish !== null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
+			free_wish.used_credits += PER_MEET_REQUEST;
+		} else {
+			res.status(500).send({
+				message: "Meeting request unsuccessful. You have insufficient credits."
+			});
+		}
+
 		sgMail
 			.send(msg)
 			.then((response) => {
 				if (response[0].statusCode === 202) {
+					free_wish.save();
 					console.log('email sent succeessfully');
 					res.send({ reqmeet: 'Meeting request sent successfully!' });
 				} else {
-					console.log(response)
+					console.log(response);
 					res.status(500).send({
 						message: "Meeting request unsuccessful. Please try again."
 					});
 				}
 			})
 			.catch((error) => {
-				console.log(error)
+				console.log(error);
 				res.status(500).send({
 					message: "Meeting request unsuccessful. Please try again."
 				});
 			});
 
 	} catch (err) {
-		console.log(err)
+		console.log(err);
 		res.status(500).send({
 			message: "Meeting request unsuccessful. Please try again.",
 			err: err
