@@ -464,9 +464,9 @@ exports.reqmeet = async (req, res) => {
 			photolink
 		];
 
-		let encoded_params1 = btoa(params1.join('||||'));
-		let encoded_params2 = btoa(params2.join('||||'));
-		let encoded_params3 = btoa(params3.join('||||'));
+		let encoded_params1 = 'test1'; //btoa(params1.join('||||'));
+		let encoded_params2 = 'test2'; //btoa(params2.join('||||'));
+		let encoded_params3 = 'test3'; //btoa(params3.join('||||'));
 
 		// multiple emails
 		let em = remail.split(',');
@@ -528,21 +528,21 @@ exports.reqmeet = async (req, res) => {
 				} else {
 					console.log(response)
 					res.status(500).send({
-						message: "Meeting request unsuccessful. Please try again.1"
+						message: "Meeting request unsuccessful. Please try again."
 					});
 				}
 			})
 			.catch((error) => {
 				console.log(error)
 				res.status(500).send({
-					message: "Meeting request unsuccessful. Please try again.2"
+					message: "Meeting request unsuccessful. Please try again."
 				});
 			});
 
 	} catch (err) {
 		console.log(err)
 		res.status(500).send({
-			message: "Meeting request unsuccessful. Please try again.3",
+			message: "Meeting request unsuccessful. Please try again.",
 			err: err
 		});
 	}
