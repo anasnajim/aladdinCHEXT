@@ -409,7 +409,7 @@ exports.reqmeet = async (req, res) => {
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `test api server`,
 			subject: "Request for a Meeting",
-			html: ``
+			html: `sending test email from api sites html side`
 		};
 
 		sgMail
