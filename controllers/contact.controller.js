@@ -481,7 +481,7 @@ exports.reqmeet = async (req, res) => {
 			}
 		}
 
-		const valid_user = await User.findOne({ where: { id: req.user_id } });
+		// const valid_user = await User.findOne({ where: { id: req.user_id } });
 
 		const msg = {
 			to: em_to,
@@ -492,33 +492,33 @@ exports.reqmeet = async (req, res) => {
 			html: `why it's not working??? with html template???`
 		};
 
-		let free_wish = await UserCredits.findOne({
-			where: {
-				user_id: req.user_id,
-				credit_type: 'trial',
-				used_credits: {
-					[Op.lt]: col('credits')
-				},
-				[Op.and]: [
-					literal(`"createdAt" + INTERVAL '14 days' >= now()`)
-				]
-			},
-			order: [
-				['id', 'ASC']
-			]
-		});
+		// let free_wish = await UserCredits.findOne({
+		// 	where: {
+		// 		user_id: req.user_id,
+		// 		credit_type: 'trial',
+		// 		used_credits: {
+		// 			[Op.lt]: col('credits')
+		// 		},
+		// 		[Op.and]: [
+		// 			literal(`"createdAt" + INTERVAL '14 days' >= now()`)
+		// 		]
+		// 	},
+		// 	order: [
+		// 		['id', 'ASC']
+		// 	]
+		// });
 
-		if (free_wish != null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
-			free_wish.used_credits += PER_MEET_REQUEST;
-		} else {
-			res.status(500).send({
-				message: "Meeting request unsuccessful. You have insufficient credits."
-			});
-		}
+		// if (free_wish != null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
+		// 	free_wish.used_credits += PER_MEET_REQUEST;
+		// } else {
+		// 	res.status(500).send({
+		// 		message: "Meeting request unsuccessful. You have insufficient credits."
+		// 	});
+		// }
 
 		await sgMail.send(msg);
 		// free_wish.save();
-		res.send({ message: 'Meeting request sent successfully!' });
+		res.send({ message: 'Meeting request sent successfully!', data: msg });
 
 	} catch (error) {
 		console.log(error);
