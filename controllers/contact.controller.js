@@ -485,7 +485,6 @@ exports.reqmeet = async (req, res) => {
 
 		const msg = {
 			to: em_to,
-			reply_to: valid_user.user_email,
 			from: process.env.SENDGRID_MAIL_PORTAL,
 			fromname: `${valid_user.user_firstname} ${valid_user.user_lastname}`,
 			subject: "Request for a Meeting",
