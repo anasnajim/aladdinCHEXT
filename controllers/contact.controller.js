@@ -468,9 +468,9 @@ exports.reqmeet = async (req, res) => {
 			photolink
 		];
 
-		// let encoded_params1 = btoa(params1.join('||||'));
-		// let encoded_params2 = btoa(params2.join('||||'));
-		// let encoded_params3 = btoa(params3.join('||||'));
+		let encoded_params1 = Buffer.from(params1.join('||||')).toString('base64');
+		let encoded_params2 = Buffer.from(params2.join('||||')).toString('base64');
+		let encoded_params3 = Buffer.from(params3.join('||||')).toString('base64');
 
 		// multiple emails
 		let em = remail.split(',');
@@ -491,32 +491,32 @@ exports.reqmeet = async (req, res) => {
 			html: `why it's not working??? with html template???`
 		};
 
-		// let free_wish = await UserCredits.findOne({
-		// 	where: {
-		// 		user_id: req.user_id,
-		// 		credit_type: 'trial',
-		// 		used_credits: {
-		// 			[Op.lt]: col('credits')
-		// 		},
-		// 		[Op.and]: [
-		// 			literal(`"createdAt" + INTERVAL '14 days' >= now()`)
-		// 		]
-		// 	},
-		// 	order: [
-		// 		['id', 'ASC']
-		// 	]
-		// });
+		let free_wish = await UserCredits.findOne({
+			where: {
+				user_id: req.user_id,
+				credit_type: 'trial',
+				used_credits: {
+					[Op.lt]: col('credits')
+				},
+				[Op.and]: [
+					literal(`"createdAt" + INTERVAL '14 days' >= now()`)
+				]
+			},
+			order: [
+				['id', 'ASC']
+			]
+		});
 
-		// if (free_wish != null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
-		// 	free_wish.used_credits += PER_MEET_REQUEST;
-		// } else {
-		// 	res.status(500).send({
-		// 		message: "Meeting request unsuccessful. You have insufficient credits."
-		// 	});
-		// }
+		if (free_wish != null && (free_wish.credits - free_wish.used_credits - PER_MEET_REQUEST) >= 0) {
+			free_wish.used_credits += PER_MEET_REQUEST;
+		} else {
+			res.status(500).send({
+				message: "Meeting request unsuccessful. You have insufficient credits."
+			});
+		}
 
 		await sgMail.send(msg);
-		// free_wish.save();
+		free_wish.save();
 		res.send({ message: 'Meeting request sent successfully!', data: msg });
 
 	} catch (error) {
