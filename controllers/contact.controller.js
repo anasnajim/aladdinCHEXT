@@ -468,9 +468,9 @@ exports.reqmeet = async (req, res) => {
 			photolink
 		];
 
-		let encoded_params1 = btoa(params1.join('||||'));
-		let encoded_params2 = btoa(params2.join('||||'));
-		let encoded_params3 = btoa(params3.join('||||'));
+		// let encoded_params1 = btoa(params1.join('||||'));
+		// let encoded_params2 = btoa(params2.join('||||'));
+		// let encoded_params3 = btoa(params3.join('||||'));
 
 		// multiple emails
 		let em = remail.split(',');
