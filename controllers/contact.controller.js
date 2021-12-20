@@ -481,7 +481,7 @@ exports.reqmeet = async (req, res) => {
 			}
 		}
 
-		// const valid_user = await User.findOne({ where: { id: req.user_id } });
+		const valid_user = await User.findOne({ where: { id: req.user_id } });
 
 		const msg = {
 			to: em_to,
